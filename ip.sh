@@ -5,7 +5,7 @@ current_bash_version=$(bash --version|head -n 1|awk -F ' ' '{for (i=1; i<=NF; i+
 if [ "$current_bash_version" = "0" ]||[ "$current_bash_version" = "1" ]||[ "$current_bash_version" = "2" ]||[ "$current_bash_version" = "3" ];then
 echo "ERROR: Bash version is lower than 4.0!"
 echo "Tips: Run the following script to automatically upgrade Bash."
-echo "bash <(curl -sL https://raw.githubusercontent.com/xykt/IPQuality/main/ref/upgrade_bash.sh)"
+echo "bash <(curl -sL https://raw.githubusercontent.com/InTheForests/IPQuality/refs/heads/main/ip.sh)"
 exit 0
 fi
 }
@@ -97,9 +97,9 @@ declare Media_Cookie
 declare IATA_Database
 shelp_lines=(
 "IP QUALITY CHECK SCRIPT IP质量体检脚本"
-"Interactive Interface:  bash <(curl -sL https://IP.Check.Place) -EM"
-"交互界面：              bash <(curl -sL https://IP.Check.Place) -M"
-"Parameters 参数运行: bash <(curl -sL https://IP.Check.Place) [-4] [-6] [-f] [-h] [-i iface] [-j] [-l language] [-n] [-o outputpath] [-p] [-x proxy] [-y] [-E] [-M]"
+"Interactive Interface:  bash <(curl -sL https://raw.githubusercontent.com/InTheForests/IPQuality/refs/heads/main/ip.sh) -EM"
+"交互界面：              bash <(curl -sL https://raw.githubusercontent.com/InTheForests/IPQuality/refs/heads/main/ip.sh) -M"
+"Parameters 参数运行: bash <(curl -sL https://raw.githubusercontent.com/InTheForests/IPQuality/refs/heads/main/ip.sh) [-4] [-6] [-f] [-h] [-i iface] [-j] [-l language] [-n] [-o outputpath] [-p] [-x proxy] [-y] [-E] [-M]"
 "            -4                             Test IPv4                                  测试IPv4"
 "            -6                             Test IPv6                                  测试IPv6"
 "            -f                             Show full IP on reports                    报告展示完整IP地址"
@@ -146,8 +146,8 @@ sinfo[ldnsbl]=28
 shead[title]="IP QUALITY CHECK REPORT: "
 shead[title_lite]="IP QUALITY CHECK REPORT(LITE): "
 shead[ver]="Version: $script_version"
-shead[bash]="bash <(curl -sL https://Check.Place) -EI"
-shead[git]="https://github.com/xykt/IPQuality"
+shead[bash]="bash <(curl -sL https://raw.githubusercontent.com/InTheForests/IPQuality/refs/heads/main/ip.sh) -EI"
+shead[git]="https://github.com/InTheForests/IPQuality"
 shead[time_raw]=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
 shead[time]="Report Time: ${shead[time_raw]}"
 shead[ltitle]=25
@@ -242,10 +242,7 @@ smail[available]="$Font_Suffix${Font_Cyan}Active $Font_B"
 smail[clean]="$Font_Suffix${Font_Green}Clean $Font_B"
 smail[marked]="$Font_Suffix${Font_Yellow}Marked $Font_B"
 smail[blacklisted]="$Font_Suffix${Font_Red}Blacklisted $Font_B"
-stail[stoday]="IP Checks Today: "
-stail[stotal]="; Total: "
 stail[thanks]=". Thanks for running xy scripts!"
-stail[link]="${Font_I}Report Link: $Font_U"
 ;;
 "cn")swarn[1]="错误：不支持的参数！"
 swarn[2]="错误：IP地址格式错误！"
@@ -271,8 +268,8 @@ sinfo[ldnsbl]=21
 shead[title]="IP质量体检报告："
 shead[title_lite]="IP质量体检报告(Lite)："
 shead[ver]="脚本版本：$script_version"
-shead[bash]="bash <(curl -sL https://Check.Place) -I"
-shead[git]="https://github.com/xykt/IPQuality"
+shead[bash]="bash <(curl -sL https://raw.githubusercontent.com/InTheForests/IPQuality/refs/heads/main/ip.sh) -I"
+shead[git]="https://github.com/InTheForests/IPQuality"
 shead[time_raw]=$(TZ="Asia/Shanghai" date +"%Y-%m-%d %H:%M:%S CST")
 shead[time]="报告时间：${shead[time_raw]}"
 shead[ltitle]=16
@@ -367,18 +364,13 @@ smail[available]="$Font_Suffix$Font_Cyan有效 $Font_B"
 smail[clean]="$Font_Suffix$Font_Green正常 $Font_B"
 smail[marked]="$Font_Suffix$Font_Yellow已标记 $Font_B"
 smail[blacklisted]="$Font_Suffix$Font_Red黑名单 $Font_B"
-stail[stoday]="今日IP检测量："
-stail[stotal]="；总检测量："
 stail[thanks]="。感谢使用xy系列脚本！"
-stail[link]="$Font_I报告链接：$Font_U"
 ;;
 *)echo -ne "ERROR: Language not supported!"
 esac
 }
 countRunTimes(){
-local RunTimes=$(curl $CurlARG -s --max-time 10 "https://hits.xykt.de/ip?action=hit" 2>&1)
-stail[today]=$(echo "$RunTimes"|jq '.daily')
-stail[total]=$(echo "$RunTimes"|jq '.total')
+:
 }
 show_progress_bar(){
 show_progress_bar_ "$@" 1>&2
@@ -521,10 +513,10 @@ local timeout=2
 local http_code
 http_code=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout "$timeout" "$url" 2>/dev/null)
 if [[ $http_code == "204" ]];then
-rawgithub="https://github.com/xykt/IPQuality/raw/"
+rawgithub="https://raw.githubusercontent.com/InTheForests/IPQuality/refs/heads/"
 return 0
 else
-rawgithub="https://testingcf.jsdelivr.net/gh/xykt/IPQuality@"
+rawgithub="https://raw.githubusercontent.com/InTheForests/IPQuality/refs/heads/"
 return 1
 fi
 }
@@ -560,7 +552,7 @@ local response
 IPV4=""
 local API_NET=("myip.check.place" "ip.sb" "ping0.cc" "icanhazip.com" "api64.ipify.org" "ifconfig.co" "ident.me")
 for p in "${API_NET[@]}";do
-response=$(curl $CurlARG -s4 --max-time 2 "$p")
+response=$(curl $CurlARG -s4 --max-time 5 "https://$p")
 if [[ $? -eq 0 && ! $response =~ error && -n $response ]];then
 IPV4="$response"
 break
@@ -600,7 +592,7 @@ local response
 IPV6=""
 local API_NET=("myip.check.place" "ip.sb" "ping0.cc" "icanhazip.com" "api64.ipify.org" "ifconfig.co" "ident.me")
 for p in "${API_NET[@]}";do
-response=$(curl $CurlARG -s6k --max-time 2 "$p")
+response=$(curl $CurlARG -s6k --max-time 5 "https://$p")
 if [[ $? -eq 0 && ! $response =~ error && -n $response ]];then
 IPV6="$response"
 break
@@ -2163,7 +2155,7 @@ fi
 }
 show_tail(){
 echo -ne "\r$(printf '%72s'|tr ' ' '=')\n"
-echo -ne "\r$Font_I${stail[stoday]}${stail[today]}${stail[stotal]}${stail[total]}${stail[thanks]} $Font_Suffix\n"
+echo -ne "\r$Font_I${stail[thanks]} $Font_Suffix\n"
 echo -e ""
 }
 get_opts(){
@@ -2241,9 +2233,9 @@ esac
 done
 if [[ $mode_menu -eq 1 ]];then
 if [[ $YY == "cn" ]];then
-eval "bash <(curl -sL https://Check.Place) -I"
+eval "bash <(curl -sL https://raw.githubusercontent.com/InTheForests/IPQuality/refs/heads/main/ip.sh) -I"
 else
-eval "bash <(curl -sL https://Check.Place) -EI"
+eval "bash <(curl -sL https://raw.githubusercontent.com/InTheForests/IPQuality/refs/heads/main/ip.sh) -EI"
 fi
 exit 0
 fi
@@ -2256,71 +2248,7 @@ echo -ne "\r$shelp\n"
 exit 0
 }
 show_ad(){
-RANDOM=$(date +%s)
-local -a ads=()
-local i=1
-while :;do
-local content
-content=$(curl -fsL --max-time 5 "${rawgithub}main/ref/ad$i.ans")||break
-ads+=("$content")
-((i++))
-done
 ADLines=0
-local adCount=${#ads[@]}
-[[ $adCount -eq 0 ]]&&return
-local -a indices=()
-for ((i=1; i<=adCount; i++));do indices+=("$i");done
-for ((i=adCount-1; i>0; i--));do
-local j=$((RANDOM%(i+1)))
-local tmp=${indices[i]}
-indices[i]=${indices[j]}
-indices[j]=$tmp
-done
-local -a aad
-aad[0]=$(curl -sL --max-time 5 "${rawgithub}main/ref/sponsor.ans")
-for ((i=0; i<adCount; i++));do
-aad[${indices[i]}]="${ads[i]}"
-done
-local rows cols
-if ! read rows cols < <(stty size 2>/dev/null);then cols=0;fi
-print_pair(){
-local left="$1" right="$2"
-local -a L R
-mapfile -t L <<<"$left"
-mapfile -t R <<<"$right"
-local i
-for ((i=0; i<12; i++));do
-printf "%-72s$Font_Suffix     %-72s\n" "${L[i]}" "${R[i]}" 1>&2
-done
-ADLines=$((ADLines+12))
-}
-print_block(){
-echo "$1" 1>&2
-ADLines=$((ADLines+12))
-}
-if [[ $cols -ge 150 ]];then
-if ((adCount==0));then
-print_block "${aad[0]}"
-elif ((adCount%2==1));then
-print_pair "${aad[0]}" "${aad[1]}"
-local k
-for ((k=2; k<=adCount; k+=2));do
-print_pair "${aad[$k]}" "${aad[$((k+1))]}"
-done
-else
-print_block "${aad[0]}"
-local k
-for ((k=1; k<=adCount; k+=2));do
-print_pair "${aad[$k]}" "${aad[$((k+1))]}"
-done
-fi
-else
-echo "${aad[0]}" 1>&2
-for ((i=1; i<=adCount; i++));do
-echo "${aad[$i]}" 1>&2
-done
-ADLines=$(((adCount+1)*12))
-fi
 }
 read_ref(){
 Media_Cookie=$(curl $CurlARG -sL --retry 3 --max-time 10 "${rawgithub}main/ref/cookies.txt")
@@ -2557,7 +2485,6 @@ ipjson='{
     }'
 [[ $2 -eq 4 ]]&&hide_ipv4 $IP
 [[ $2 -eq 6 ]]&&hide_ipv6 $IP
-countRunTimes
 db_maxmind $2
 db_ipinfo
 [[ $mode_lite -eq 0 ]]&&db_scamalytics $2||scamalytics=()
@@ -2603,11 +2530,8 @@ show_media
 show_mail $2
 show_tail)
 fi
-local report_link=""
-[[ mode_json -eq 1 || mode_output -eq 1 || mode_privacy -eq 0 ]]&&save_json
-[[ $mode_lite -eq 0 && mode_privacy -eq 0 ]]&&report_link=$(curl -$2 -s -X POST https://upload.check.place -d "type=ip" --data-urlencode "json=$ipjson" --data-urlencode "content=$ip_report")
+[[ mode_json -eq 1 || mode_output -eq 1 ]]&&save_json
 [[ mode_json -eq 0 ]]&&echo -ne "\r$ip_report\n"
-[[ mode_json -eq 0 && mode_privacy -eq 0 && $report_link == *"https://Report.Check.Place/"* ]]&&echo -ne "\r${stail[link]}$report_link$Font_Suffix\n"
 [[ mode_json -eq 1 ]]&&echo -ne "\r$ipjson\n"
 echo -ne "\r\n"
 if [[ mode_output -eq 1 ]];then
